@@ -1,0 +1,74 @@
+#!/bin/sh
+
+cd $(dirname $0)/..
+app_root=$(pwd)
+pids_dir="$app_root/tmp/pids"
+sidekiq_log="$app_root/log/sidekiq.log"
+sidekiq_config="$app_root/config/sidekiq.yml"
+sidekiq_pid="$pids_dir/sidekiq.pid"
+rails_env=$RAILS_ENV
+
+
+if [ "$rails_env" == "" ];then
+    rails_env="development"
+fi
+
+if [ ! -d "$pids_dir" ];then
+    mkdir -p "$pids_dir"
+fi
+
+start_server()
+{
+    bundle exec pumactl start -e $rails_env
+}
+
+stop_server()
+{
+    bundle exec pumactl stop -e $rails_env
+}
+
+restart_server()
+{
+    bundle exec pumactl restart -e $rails_env
+}
+
+stop_sidekiq()
+{
+    bundle exec sidekiqctl stop $sidekiq_pid
+}
+
+start_sidekiq()
+{
+    bundle exec sidekiq -d -L $sidekiq_log -c 10 -e $rails_env -C $sidekiq_config -P $sidekiq_pid
+}
+
+restart_sidekiq()
+{
+    if [ -f $sidekiq_pid ]; then
+        stop_sidekiq
+    fi
+    start_sidekiq
+}
+
+case "$1" in
+  start_server)
+    start_server
+    ;;
+  restart_server)
+    restart_server
+    ;;
+  stop_server)
+    stop_server
+    ;;
+  start_sidekiq)
+    start_sidekiq
+    ;;
+  stop_sidekiq)
+    stop_sidekiq
+    ;;
+  restart_sidekiq)
+    restart_sidekiq
+    ;;
+  *)
+    echo "Usage: RAILS_ENV=your_env $0 {start_server|stop_server|restart_server|start_sidekiq|stop_sidekiq|restart_sidekiq}"
+esac

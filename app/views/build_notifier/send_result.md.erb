@@ -1,0 +1,19 @@
+## <%= @build.project.title %> - <%= @build.project.platform.upcase %> - <%= @build.id %> 构建日志
+构建版本:
+### <%= @build.version %>
+构建环境:
+### <%= @build.environment.name %>
+构建结果:
+### <%= @build.status.capitalize %>
+下载地址：
+### <%= download_project_build_url(@build.project.id, @build) %>
+<% @build.environment.active_publish_services.each do |service| %>
+<% if service.respond_to?(:download_url) %>
+<%=service.title %>：
+### <%= service.download_url %>
+<% end %>
+<% end %>
+构建日志：
+<% @build.release_notes.each do |note| %>
+* <%= note.content %>
+<% end %>

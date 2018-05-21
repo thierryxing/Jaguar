@@ -1,0 +1,33 @@
+# == Schema Information
+#
+# Table name: projects
+#
+#  id             :integer          not null, primary key
+#  title          :string
+#  desc           :string
+#  icon           :string
+#  git_repo_url   :string
+#  created_at     :datetime
+#  updated_at     :datetime
+#  clone_status   :integer
+#  git_project_id :integer
+#  type           :string           default("0")
+#  platform       :integer          default("ios")
+#  admin_id       :integer
+#  user_id        :integer
+#  identifier     :string
+#  cron           :string
+#  name           :string
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value
